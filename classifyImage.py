@@ -43,7 +43,7 @@ def blackWhiteBalanceCheck(image):
 
 def getCroppedSection(image, boundingBox):
 	startImage = Image.open(image)
-	return bwImage.crop(boundingBox)
+	return startImage.crop(boundingBox)
 
 def blackAndWhiteImage(image):
 	grey = image.convert('L')
@@ -60,8 +60,9 @@ def moveAllImages(path):
 	for image in files:
 		imageInstructions = getInstructionsFromImage(image)
 		destinationFolder = getDestFolder(imageInstructions)
-		if destinationFolder == "unclassifiable" and isAllWhite(image):
+		if destinationFolder == "unclassifiable" and isAllWhite(Image.open(image)):
 			destinationFolder = "video"
+		print(destinationFolder)
 		moveTo(image, destinationFolder, path)
 
 def isAllWhite(image):
