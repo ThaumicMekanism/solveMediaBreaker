@@ -26,10 +26,10 @@ def resizeAndOcr(im):
 
 def getInstructionsFromImage(image):
 	# Open image and crop it to only the top left corner - this may contain instructions
-	topLeftCrop = blackAndWhiteImage(getCroppedSection(image, (0, 0, 133, 17)))
+	topLeftCrop = getCroppedSection(image, (0, 0, 133, 17))
 	ins = resizeAndOcr(topLeftCrop)
 	if ins == '' or blackWhiteBalanceCheck(topLeftCrop):
-		midLeftCrop = blackAndWhiteImage(getCroppedSection(image, (0, 85, 133, 100)))
+		midLeftCrop = getCroppedSection(image, (0, 85, 133, 100))
 		return resizeAndOcr(midLeftCrop)
 	else:
 		return ins
@@ -42,8 +42,7 @@ def blackWhiteBalanceCheck(image):
 	return whiteCount < (total * 0.15)
 
 def getCroppedSection(image, boundingBox):
-	startImage = Image.open(image)
-	return startImage.crop(boundingBox)
+	return image.crop(boundingBox)
 
 def blackAndWhiteImage(image):
 	grey = image.convert('L')
@@ -57,16 +56,15 @@ def moveAllImages(path):
 	files = glob.glob(path + '*.png')
 	if len(files) == 0:
 		print("There are no matching files.")
-	for image in files:
+	for imagePath in files:
+		image = blackAndWhiteImage(Image.open(imagePath))
 		imageInstructions = getInstructionsFromImage(image)
 		destinationFolder = getDestFolder(imageInstructions)
-		if destinationFolder == "unclassifiable" and isAllWhite(Image.open(image)):
+		if destinationFolder == "unclassifiable" and isAllWhite(image):
 			destinationFolder = "video"
-		print(destinationFolder)
-		moveTo(image, destinationFolder, path)
+		moveTo(imagePath, destinationFolder, path)
 
 def isAllWhite(image):
-	image = blackAndWhiteImage(image)
 	# Return whether the number of black pixels in the image is 0; in this case the image is plain white
 	return image.histogram()[0] == 0
 
