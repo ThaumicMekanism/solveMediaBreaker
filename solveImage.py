@@ -51,7 +51,6 @@ def solveGeneralknowledge(image):
 # This solves all known Next Line challenges, there may very well be more.
 def solveNextline(image):
 	inst = getInstructionsFromImage(blackAndWhiteImage(image)).lower()
-	print(inst)
 	if 'the n' in inst:
 		return "violets are blue"
 	elif 'finish' in inst:
