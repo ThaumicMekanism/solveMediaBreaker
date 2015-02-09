@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 from PIL import Image
 import pyocr, pyocr.builders
@@ -6,9 +6,9 @@ import sys, glob, os
 from shutil import move
 from helpers import sanitisePath
 
-# Get the tool and language we're using (first available in each case for now)
+# Get the tool and language we're using, specifying eng for the language for now
 tool = pyocr.get_available_tools()[0]
-lang = tool.get_available_languages()[0]
+lang = 'eng'
 
 def moveTo(image, folder, path):
 	print("Moving: '" + image + "'")
