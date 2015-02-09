@@ -58,15 +58,19 @@ def moveAllImages(path):
 		print("There are no matching files.")
 	for imagePath in files:
 		image = blackAndWhiteImage(Image.open(imagePath))
-		imageInstructions = getInstructionsFromImage(image)
-		destinationFolder = getDestFolder(imageInstructions)
-		if destinationFolder == "unclassifiable" and isAllWhite(image):
-			destinationFolder = "video"
+		destinationFolder = getImageType(image)
 		moveTo(imagePath, destinationFolder, path)
 
 def isAllWhite(image):
 	# Return whether the number of black pixels in the image is 0; in this case the image is plain white
 	return image.histogram()[0] == 0
+
+def getImageType(image):
+	imageInstructions = getInstructionsFromImage(image)
+	destinationFolder = getDestFolder(imageInstructions)
+	if destinationFolder == "unclassifiable" and isAllWhite(image):
+		destinationFolder = "video"
+	return destinationFolder
 
 def getDestFolder(instructions):
 	inst = instructions.lower()

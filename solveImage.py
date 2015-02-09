@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 
 from classifyImage import getImageType, blackAndWhiteImage
+import pyocr, pyocr.builders
 from PIL import Image
+import numpy
 import sys
 
 def solveGeneralknowledge(image):
@@ -11,7 +13,21 @@ def solveNextline(image):
 	print("Solving next line problem")
 
 def solvePatterns(image):
-	print("Solving pattern problem")
+	tool = pyocr.get_available_tools()[0]
+	print(tool)
+	# Probably need to do some dynamic monochrome-ing here, or some more complex processing to make characters monochrome
+	# Print image numerical data greyscale for testing
+	#data = numpy.array(image.convert('L'))
+	#for x in data:
+	#	print(x)
+	# Save image as greyscale for testing
+	#image.convert('L').save('test1.png')
+	bw = image.convert('L').point( lambda x: 0 if x < 200 else 255)
+	# So... for some reason this isn't working... at all.  Returning nothing.  What the shit?!
+	# The 200 constant above will probably need to change to some dynamic value as well.
+	# These lines have only been tested with the images from Martha Stewart, probably not good with
+	# other images anyway.
+	return tool.image_to_string(bw, lang='eng', builder=pyocr.builders.TextBuilder())
 
 def solvePleaseenter(image):
 	print("Solving Please enter problem")
@@ -37,7 +53,8 @@ def solveSingleImage(pathToImage):
 	# the image.
 	functionName = 'solve' + imageType.title()
 	solution = globals()[functionName](image)
+	return solution
 
 if __name__ == "__main__":
 	path = sys.argv[1]
-	solveSingleImage(path)
+	print(solveSingleImage(path))
