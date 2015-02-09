@@ -8,12 +8,43 @@ import sys
 	
 tool = pyocr.get_available_tools()[0]
 
+# This function is probably incomplete - population estimation puts the number of challenges at 36
 def solveGeneralknowledge(image):
-	imageText = tool.image_to_string(image, lang='eng', builder=pyocr.builders.TextBuilder()).lower()
+	# Get the text from the image, this should be enough to get the question from the image since they're unobfuscated,
+	# also make it lower case and all one line.
+	imageText = tool.image_to_string(image, lang='eng', builder=pyocr.builders.TextBuilder()).lower().replace('\n', ' ')
 	if 'liberty' in imageText:
 		return "France"
-	if 'impressionist' in imageText:
+	elif 'impressionist' in imageText:
 		return 'Edgar Degas'
+	elif 'animal' in imageText and not 'venom' in imageText:
+		return 'rhino beetle'
+	elif 'national emblem' in imageText:
+		return 'bald eagle'
+	elif 'book published' in imageText:
+		return 'the bible'
+	elif 'yoko ono' in imageText:
+		return 'john lennon'
+	elif 'which us' in imageText:
+		return 'seattle'
+	elif 'venom' in imageText:
+		return 'box jellyfish'
+	elif 'dies solis' in imageText:
+		return 'sunday'
+	elif 'wright' in imageText and 'hawk' in imageText:
+		return 'wright flyer'
+	elif 'brand name' in imageText:
+		return 'crayola'
+	elif 'grapes' in imageText:
+		return 'john steinbeck'
+	# I know this line is spelled wrong: Tesseract seems to have trouble with 't's and consistently recognises them as 'x'
+	elif 'possible temperaxure' in imageText:
+		return 'absolute zero'
+	elif 'apple founder' in imageText:
+		return 'steve jobs'
+	# 'l' fails to recognise, comes out as pipe
+	elif 'anima|' in imageText and 'chinese' in imageText:
+		return 'giant panda'
 	else:
 		return imageText
 
@@ -30,6 +61,7 @@ def solveNextline(image):
 	else:
 		return None
 
+# This needs much work.  Only need to recognise one character from the challenge but it needs to be accurate all the time.
 def solvePatterns(image):
 	# Probably need to do some dynamic monochrome-ing here, or some more complex processing to make characters monochrome
 	# Print image numerical data greyscale for testing
