@@ -69,23 +69,25 @@ def solvePatterns(image):
 	#for x in data:
 	#	print(x)
 	# Save image as greyscale for testing
-	image.convert('L').save('test1.png')
+	#image.convert('L').save('test1.png')
 	# This produces a decent image for the cases I've looked at so far but the OCR is still not returning anything useful.
 	# This is going to be more complicated than I thought.
 	bw = image.convert('L').point( lambda x: 0 if x < int(data.mean()) else 255)
-	bw.save('test2.png')
+	#bw.save('test2.png')
 	return tool.image_to_string(bw, lang='eng', builder=pyocr.builders.TextBuilder())
 
 def solvePleaseenter(image):
 	print("Solving please enter problem")
 
 def solvePleasepick(image):
+	# TODO: Find out the answers to these
 	print("Solving please pick problem")
 
 def solvePuzzles(image):
 	print("Solving puzzle problem")
 
 def solveUnclassifiable(image):
+	# TODO: Possibly classify these better
 	print("Solving unclassifiable problem")
 
 def solveVideo(image):
