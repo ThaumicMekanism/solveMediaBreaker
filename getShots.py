@@ -16,7 +16,11 @@ def getCaptcha(i, path, elementId, driver):
 	driver.save_screenshot(path + imageName)
 
 	# Get the captcha element and the position and size of it on the page
-	captchaElem = driver.find_element_by_id(elementId)
+	try:
+		captchaElem = driver.find_element_by_id(elementId)
+	except:
+		time.sleep(5)
+		captchaElem = driver.find_element_by_id(elementId)
 	captchaPos = captchaElem.location
 	captchaSize = captchaElem.size
 
