@@ -85,24 +85,30 @@ def solvePatterns(image):
 	# This is going to be more complicated than I thought.
 	bw = image.convert('L').point( lambda x: 0 if x < int(data.mean()) else 255)
 	#bw.save('test2.png')
-	return tool.image_to_string(bw, lang='eng', builder=pyocr.builders.TextBuilder())
+	print(tool.image_to_string(bw, lang='eng', builder=pyocr.builders.TextBuilder()))
+	return None
 
 def solvePleaseenter(image):
 	print("Solving please enter problem")
+	return None
 
 def solvePleasepick(image):
 	# TODO: Find out the answers to these
 	print("Solving please pick problem")
+	return None
 
 def solvePuzzles(image):
 	print("Solving puzzle problem")
+	return None
 
 def solveUnclassifiable(image):
 	# TODO: Possibly classify these better
 	print("Solving unclassifiable problem")
+	return None
 
 def solveVideo(image):
 	print("Cannot solve video problem")
+	return None
 
 def solveSingleImage(pathToImage):
 	image = Image.open(pathToImage)
