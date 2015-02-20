@@ -4,7 +4,7 @@ import classifyImage, getShots
 import json
 
 number = 1000
-urls = json.loads(open('captchaUrls').read())
+urls = json.loads(open('captchaUrls.json').read())
 
 for url in urls:
 	path = '/home/zaphod/pictures/screens/' + url['folder']
