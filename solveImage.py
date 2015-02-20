@@ -13,7 +13,7 @@ def solveGeneralknowledge(image):
 	# Get the text from the image, this should be enough to get the question from the image since they're unobfuscated,
 	# also make it lower case and all one line.
 	imageText = tool.image_to_string(image, lang='eng', builder=pyocr.builders.TextBuilder()).lower().replace('\n', ' ')
-	if 'liberty' in imageText:
+	if ('liberty' in imageText) or ('country presented' in imageText):
 		return "France"
 	elif 'impressionist' in imageText:
 		return 'Edgar Degas'
@@ -31,7 +31,7 @@ def solveGeneralknowledge(image):
 		return 'box jellyfish'
 	elif 'dies solis' in imageText:
 		return 'sunday'
-	elif 'wright' in imageText and 'hawk' in imageText:
+	elif 'wright' in imageText:
 		return 'wright flyer'
 	elif 'brand name' in imageText:
 		return 'crayola'
@@ -40,24 +40,35 @@ def solveGeneralknowledge(image):
 	# I know this line is spelled wrong: Tesseract seems to have trouble with 't's and consistently recognises them as 'x'
 	elif 'possible temperaxure' in imageText:
 		return 'absolute zero'
-	elif 'apple founder' in imageText:
+	elif 'apple' in imageText:
 		return 'steve jobs'
 	# 'l' fails to recognise, comes out as pipe
 	elif 'anima|' in imageText and 'chinese' in imageText:
 		return 'giant panda'
+	elif 'george orwell' in imageText:
+		return 'big brother'
+	elif 'never to live in wash' in imageText:
+		return 'george washington'
+	elif 'rhodes scholar' in imageText:
+		return 'oxford university'
 	else:
-		return imageText
+		print(imageText)
+		return None
 
 # This solves all known Next Line challenges, there may very well be more.
+# UPDATE 20/02/2015: Another added after second image farming run.  Complete again.
 def solveNextline(image):
 	inst = getInstructionsFromImage(blackAndWhiteImage(image)).lower()
 	if 'the n' in inst:
-		return "violets are blue"
-	elif 'finish' in inst:
+		return 'violets are blue'
+	elif 'finish the get' in inst:
+		return 'seven years ago'
+	elif 'finish this' in inst:
 		return 'it tolls for thee'
 	elif 'robert' in inst:
 		return 'I took the one less travelled by'
 	else:
+		print(inst)
 		return None
 
 # This needs much work.  Only need to recognise one character from the challenge but it needs to be accurate all the time.
@@ -106,4 +117,5 @@ def solveSingleImage(pathToImage):
 
 if __name__ == "__main__":
 	path = sys.argv[1]
-	print(solveSingleImage(path))
+	if solveSingleImage(path) == None:
+		print("No solution for " + path)
