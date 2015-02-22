@@ -81,8 +81,9 @@ def doOcr(image):
 def solvePatterns(image):
 	# Convert the image to greyscale
 	im = image.convert('L')
+	# Get greyscale values from our image as a flat array of numbers (0-255)
 	data = numpy.array(im).flatten()
-	# Get all the UNIQUE values in our numerical data
+	# Get all the UNIQUE values in our numerical data as a sorted NumPy array
 	vals = numpy.sort(list(set(data)))
 	im = cropOutInstructions(im)
 	# Here using the mean of all the unique data values rather than the mean of all values in general
