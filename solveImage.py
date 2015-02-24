@@ -134,7 +134,8 @@ def solvePleaseenter(image):
 	# Open the thinned image and convert back to black on white background (May be superfluous) - No traditional OCR so probably is. TODO: decide
 	thinned = Image.open(newFilename)
 	thinned = thinned.point( lambda x: 255 if x < 200 else 0)
-	# TODO: implement character recognition
+	# Next step: pattern based recognition main TODO
+	# Final step: actual segmentation
 	return None
 
 def solvePleasepick(image):
