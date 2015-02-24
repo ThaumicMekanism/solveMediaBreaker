@@ -1,3 +1,4 @@
+# Code written by github user 'bsdnoobz', available from https://github.com/bsdnoobz/zhang-suen-thinning prior to my slight edits
 from scipy import weave
 import numpy as np
 import cv2
@@ -52,13 +53,13 @@ def thinning(src):
 	return dst * 255
 
 if __name__ == "__main__":
+	# Edited here to be runnable with a parameter - the image to be thinned.
 	src = cv2.imread(sys.argv[1])
 	if src == None:
 		sys.exit()
 	bw = cv2.cvtColor(src, cv2.cv.CV_BGR2GRAY)
 	_, bw2 = cv2.threshold(bw, 10, 255, cv2.THRESH_BINARY)
 	bw2 = thinning(bw2)
+	# Writing out image to the file that I want to use in the final solve script.
 	filename = sys.argv[1].split('.')[0] + "_thinned_.png"
 	cv2.imwrite(filename, bw2)
-	cv2.waitKey(0)
-
