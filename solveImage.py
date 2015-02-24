@@ -4,9 +4,20 @@ from classifyImage import getImageType, blackAndWhiteImage, getInstructionsFromI
 import pyocr, pyocr.builders
 from PIL import Image
 import numpy
-import sys
+import sys, os
 	
 tool = pyocr.get_available_tools()[0]
+
+def cropOutInstructions(image):
+	return image.crop((0, 17, image.size[0], image.size[1]))
+
+def doOcr(image):
+	return tool.image_to_string(image, lang='eng', builder=pyocr.builders.TextBuilder()).lower()
+
+def thinImage(image):
+	pointsDeleted = True
+	while pointsDeleted:
+		pass
 
 # This function is probably incomplete - population estimation puts the number of challenges at 36
 def solveGeneralknowledge(image):
@@ -71,12 +82,6 @@ def solveNextline(image):
 		print(inst)
 		return None
 
-def cropOutInstructions(image):
-	return image.crop((0, 17, image.size[0], image.size[1]))
-
-def doOcr(image):
-	return tool.image_to_string(image, lang='eng', builder=pyocr.builders.TextBuilder()).lower()
-
 # 84.9% success rate on the challenges I have.
 def solvePatterns(image):
 	# Convert the image to greyscale
@@ -106,7 +111,30 @@ def solvePatterns(image):
 		return None
 
 def solvePleaseenter(image):
-	print("Solving please enter problem")
+	# Applying Jeff Yan's techniques for recaptcha from 'Robustness of Google Captchas' 2011 paper
+	# Preprocess: upscale
+	im = image.resize( [int(x * 4) for x in image.size] )
+	# Preprocess: greyscale
+	im = im.convert('L')
+	# My addition: crop out instructions
+	im = im.crop((0,68,im.size[0],im.size[1]))
+	# Preprocess: heuristically convert to B&W only
+	data = numpy.array(im).flatten()
+	vals = numpy.sort(list(set(data)))
+	# In this stage we actually want white letters on a black background so B&W conversion is the opposite of what we would normally use.
+	# Thinning code used requires this and I don't know enough C++ to change that.
+	bw = im.point( lambda x: 255 if x < int(vals.mean()) else 0)
+	# Save image
+	filename = image.filename.split('.')[0] + '_blackWhite_.png'
+	bw.save(filename)
+	# Preprocess: thinning by Zhang-Suen thinning algorithm, code taken from https://github.com/bsdnoobz/zhang-suen-thinning/blob/master/thinning.py
+	# Most of the nonstandard modules used by the script are not available for python 3, which is why we're calling an outside script here.
+	os.system("python thinning.py " + filename)
+	newFilename = filename.split('.')[0] + "_thinned_.png"
+	# Open the thinned image and convert back to black on white background (May be superfluous) - No traditional OCR so probably is. TODO: decide
+	thinned = Image.open(newFilename)
+	thinned = thinned.point( lambda x: 255 if x < 200 else 0)
+	# TODO: implement character recognition
 	return None
 
 def solvePleasepick(image):
